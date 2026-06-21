@@ -90,6 +90,8 @@ export class TimerCanvasRenderer {
 
     if (!this.latestSnapshot) return;
 
+    this.drawProgressRing(width, height, this.latestSnapshot);
+
     const remaining = formatDuration(this.latestSnapshot.remainingMs);
     const mode = modeText[this.latestSnapshot.state.mode];
     const status =
@@ -108,5 +110,46 @@ export class TimerCanvasRenderer {
     this.context.fillStyle = 'rgba(75, 46, 36, 0.68)';
     this.context.font = `900 ${width * 0.029}px Inter, system-ui, sans-serif`;
     this.context.fillText(status.toUpperCase(), width * 0.5, height * 0.66);
+  }
+
+  private drawProgressRing(width: number, height: number, snapshot: TimerSnapshot): void {
+    const durationMs = Math.max(1, snapshot.state.durationMs);
+    const remainingRatio = snapshot.state.status === 'idle' ? 1 : Math.max(0, Math.min(1, snapshot.remainingMs / durationMs));
+    const centerX = width * 0.5;
+    const centerY = height * 0.53;
+    const radius = width * 0.322;
+    const lineWidth = width * 0.032;
+    const startAngle = -Math.PI / 2;
+    const endAngle = startAngle + Math.PI * 2 * remainingRatio;
+
+    this.context.save();
+    this.context.lineCap = 'round';
+    this.context.lineWidth = lineWidth;
+
+    this.context.strokeStyle = 'rgba(255, 232, 190, 0.68)';
+    this.context.beginPath();
+    this.context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    this.context.stroke();
+
+    if (remainingRatio > 0.001) {
+      const gradient = this.context.createLinearGradient(
+        centerX - radius,
+        centerY - radius,
+        centerX + radius,
+        centerY + radius
+      );
+      gradient.addColorStop(0, '#fff3cf');
+      gradient.addColorStop(0.48, '#f6b456');
+      gradient.addColorStop(1, '#ef4b3e');
+
+      this.context.strokeStyle = gradient;
+      this.context.shadowColor = 'rgba(239, 75, 62, 0.32)';
+      this.context.shadowBlur = width * 0.016;
+      this.context.beginPath();
+      this.context.arc(centerX, centerY, radius, startAngle, endAngle);
+      this.context.stroke();
+    }
+
+    this.context.restore();
   }
 }
