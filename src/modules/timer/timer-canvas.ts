@@ -115,10 +115,10 @@ export class TimerCanvasRenderer {
   private drawProgressRing(width: number, height: number, snapshot: TimerSnapshot): void {
     const durationMs = Math.max(1, snapshot.state.durationMs);
     const remainingRatio = snapshot.state.status === 'idle' ? 1 : Math.max(0, Math.min(1, snapshot.remainingMs / durationMs));
-    const centerX = width * 0.505;
-    const centerY = height * 0.535;
-    const radius = width * 0.281;
-    const lineWidth = width * 0.034;
+    const centerX = width * 0.5;
+    const centerY = height * 0.53;
+    const radius = width * 0.241;
+    const lineWidth = width * 0.018;
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + Math.PI * 2 * remainingRatio;
 
