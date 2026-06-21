@@ -126,11 +126,6 @@ export class TimerCanvasRenderer {
     this.context.lineCap = 'round';
     this.context.lineWidth = lineWidth;
 
-    this.context.strokeStyle = 'rgba(255, 245, 210, 0.98)';
-    this.context.beginPath();
-    this.context.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    this.context.stroke();
-
     if (remainingRatio > 0.001) {
       const gradient = this.context.createLinearGradient(
         centerX - radius,
