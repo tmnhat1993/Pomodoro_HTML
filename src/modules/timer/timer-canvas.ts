@@ -115,10 +115,10 @@ export class TimerCanvasRenderer {
   private drawProgressRing(width: number, height: number, snapshot: TimerSnapshot): void {
     const durationMs = Math.max(1, snapshot.state.durationMs);
     const remainingRatio = snapshot.state.status === 'idle' ? 1 : Math.max(0, Math.min(1, snapshot.remainingMs / durationMs));
-    const centerX = width * 0.5;
-    const centerY = height * 0.53;
-    const radius = width * 0.326;
-    const lineWidth = width * 0.041;
+    const centerX = width * 0.505;
+    const centerY = height * 0.535;
+    const radius = width * 0.281;
+    const lineWidth = width * 0.034;
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + Math.PI * 2 * remainingRatio;
 
@@ -126,7 +126,7 @@ export class TimerCanvasRenderer {
     this.context.lineCap = 'round';
     this.context.lineWidth = lineWidth;
 
-    this.context.strokeStyle = 'rgba(255, 247, 224, 0.96)';
+    this.context.strokeStyle = 'rgba(255, 245, 210, 0.98)';
     this.context.beginPath();
     this.context.arc(centerX, centerY, radius, 0, Math.PI * 2);
     this.context.stroke();
@@ -143,8 +143,8 @@ export class TimerCanvasRenderer {
       gradient.addColorStop(1, '#cf352d');
 
       this.context.strokeStyle = gradient;
-      this.context.shadowColor = 'rgba(207, 53, 45, 0.26)';
-      this.context.shadowBlur = width * 0.01;
+      this.context.shadowColor = 'rgba(207, 53, 45, 0.2)';
+      this.context.shadowBlur = width * 0.006;
       this.context.beginPath();
       this.context.arc(centerX, centerY, radius, startAngle, endAngle);
       this.context.stroke();
