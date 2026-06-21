@@ -10,10 +10,10 @@ const modeText: Record<TimerMode, string> = {
 };
 
 const defaultRingConfig = {
-  size: 24.1,
-  thickness: 1.8,
-  x: 50,
-  y: 53
+  size: 25,
+  thickness: 2.2,
+  x: 50.9,
+  y: 52.9
 };
 
 function formatDuration(ms: number): string {

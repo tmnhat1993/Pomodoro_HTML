@@ -30,10 +30,10 @@ type DebugTarget = {
 
 const STORAGE_KEY = 'podoromo:debug-layout-v3';
 const TIMER_RING_DEFAULTS: TimerRingValue = {
-  size: 24.1,
-  thickness: 1.8,
-  x: 50,
-  y: 53
+  size: 25,
+  thickness: 2.2,
+  x: 50.9,
+  y: 52.9
 };
 
 const TARGETS: Array<Omit<DebugTarget, 'element'>> = [
