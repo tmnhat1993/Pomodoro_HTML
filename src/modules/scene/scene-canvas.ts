@@ -39,18 +39,25 @@ const weatherConditions: Record<WeatherLayer, WeatherCondition> = {
   snowNight: 'snow'
 };
 
-const cloudColors: Record<WeatherLayer, { fill: string; shadow: string }> = {
-  day: { fill: 'rgba(255, 238, 218, 0.42)', shadow: 'rgba(131, 150, 178, 0.16)' },
-  night: { fill: 'rgba(126, 145, 196, 0.24)', shadow: 'rgba(23, 35, 91, 0.18)' },
-  sunset: { fill: 'rgba(255, 164, 151, 0.34)', shadow: 'rgba(93, 48, 114, 0.18)' },
-  dawn: { fill: 'rgba(255, 221, 188, 0.36)', shadow: 'rgba(107, 131, 181, 0.14)' },
-  rainDay: { fill: 'rgba(205, 216, 229, 0.34)', shadow: 'rgba(46, 68, 96, 0.18)' },
-  rainNight: { fill: 'rgba(82, 104, 152, 0.28)', shadow: 'rgba(6, 18, 55, 0.22)' },
-  snowDay: { fill: 'rgba(245, 248, 252, 0.38)', shadow: 'rgba(151, 165, 184, 0.16)' },
-  snowNight: { fill: 'rgba(151, 171, 214, 0.28)', shadow: 'rgba(17, 32, 74, 0.2)' }
+const cloudFilters: Record<WeatherLayer, string> = {
+  day: 'saturate(0.94) brightness(1.02)',
+  night: 'saturate(0.72) brightness(0.62) contrast(0.95)',
+  sunset: 'sepia(0.18) saturate(1.08) brightness(1.02)',
+  dawn: 'sepia(0.1) saturate(0.98) brightness(1.04)',
+  rainDay: 'saturate(0.72) brightness(0.82) contrast(0.98)',
+  rainNight: 'saturate(0.62) brightness(0.48) contrast(1.02)',
+  snowDay: 'saturate(0.54) brightness(1.08) contrast(0.92)',
+  snowNight: 'saturate(0.62) brightness(0.7) contrast(0.96)'
 };
 
 const roomForegroundSource = assetPath('scene/room-foreground-window-manual-edit.png');
+const cloudSources = [
+  assetPath('scene/clouds/cloud-1.png'),
+  assetPath('scene/clouds/cloud-2.png'),
+  assetPath('scene/clouds/cloud-3.png'),
+  assetPath('scene/clouds/cloud-4.png'),
+  assetPath('scene/clouds/cloud-5.png')
+];
 
 const windowViewBox = {
   x: 719,
@@ -105,7 +112,7 @@ type CloudParticle = {
   height: number;
   speed: number;
   alpha: number;
-  puffCount: number;
+  spriteIndex: number;
   phase: number;
 };
 
@@ -145,6 +152,7 @@ export class SceneCanvasRenderer {
     this.resizeCanvas();
     void this.loadImage(weatherSources[this.weather]);
     void this.loadImage(roomForegroundSource);
+    cloudSources.forEach((source) => void this.loadImage(source));
     this.loop();
   }
 
@@ -278,41 +286,21 @@ export class SceneCanvasRenderer {
     this.context.beginPath();
     this.context.rect(windowRect.x, windowRect.y, windowRect.width, windowRect.height);
     this.context.clip();
-    this.context.filter = `blur(${Math.max(0.8, windowRect.width * 0.0022)}px)`;
+    this.context.filter = `blur(${Math.max(0.35, windowRect.width * 0.0008)}px) ${cloudFilters[this.getEffectWeatherLayer()]}`;
 
-    const colors = cloudColors[this.getEffectWeatherLayer()];
     for (const cloud of this.cloudParticles) {
+      const sprite = this.images.get(cloudSources[cloud.spriteIndex]);
+      if (!sprite?.complete || !sprite.naturalWidth || !sprite.naturalHeight) continue;
+
       const x = windowRect.x + cloud.x;
-      const y = windowRect.y + cloud.y;
-
+      const y = windowRect.y + cloud.y + Math.sin(cloud.phase) * cloud.height * 0.04;
       this.context.globalAlpha = cloud.alpha;
-      this.context.fillStyle = colors.shadow;
-      this.drawCloudShape(x + cloud.width * 0.04, y + cloud.height * 0.18, cloud);
-
-      this.context.globalAlpha = cloud.alpha;
-      this.context.fillStyle = colors.fill;
-      this.drawCloudShape(x, y, cloud);
+      this.context.drawImage(sprite, x, y, cloud.width, cloud.height);
     }
 
     this.context.filter = 'none';
     this.context.globalAlpha = 1;
     this.context.restore();
-  }
-
-  private drawCloudShape(x: number, y: number, cloud: CloudParticle): void {
-    this.context.beginPath();
-
-    for (let index = 0; index < cloud.puffCount; index += 1) {
-      const progress = cloud.puffCount === 1 ? 0.5 : index / (cloud.puffCount - 1);
-      const wobble = Math.sin(cloud.phase + index * 1.73);
-      const puffX = x + cloud.width * (0.08 + progress * 0.84);
-      const puffY = y + cloud.height * (0.42 + wobble * 0.08);
-      const puffWidth = cloud.width * (0.2 + (1 - Math.abs(progress - 0.5) * 1.4) * 0.16);
-      const puffHeight = cloud.height * (0.34 + Math.cos(cloud.phase + index) * 0.06);
-      this.context.ellipse(puffX, puffY, puffWidth, puffHeight, 0, 0, Math.PI * 2);
-    }
-
-    this.context.fill();
   }
 
   private drawRain(windowRect: WindowRect): void {
@@ -388,13 +376,16 @@ export class SceneCanvasRenderer {
     this.cloudFrameKey = frameKey;
     this.cloudParticles.length = 0;
 
-    const count = profile === 'heavy' ? 16 : 7;
+    const count = profile === 'heavy' ? 12 : 6;
     for (let index = 0; index < count; index += 1) {
       const horizonDepth = Math.random();
       const y = windowRect.height * (0.06 + horizonDepth * 0.52);
       const perspective = 1 - horizonDepth * 0.56;
-      const width = windowRect.width * (0.24 + Math.random() * 0.2) * perspective;
-      const height = width * (0.22 + Math.random() * 0.08);
+      const spriteIndex = Math.floor(Math.random() * cloudSources.length);
+      const sprite = this.images.get(cloudSources[spriteIndex]);
+      const width = windowRect.width * (0.18 + Math.random() * 0.16) * perspective;
+      const spriteAspect = sprite?.naturalWidth && sprite?.naturalHeight ? sprite.naturalHeight / sprite.naturalWidth : 0.42;
+      const height = width * spriteAspect * (0.82 + Math.random() * 0.2);
       const speedBase = profile === 'heavy' ? 13 : 18;
       const speed = speedBase * (0.35 + perspective * 0.65) * (0.72 + Math.random() * 0.46);
 
@@ -404,8 +395,8 @@ export class SceneCanvasRenderer {
         width,
         height,
         speed,
-        alpha: (profile === 'heavy' ? 0.99 : 0.63) * (0.58 + perspective * 0.42),
-        puffCount: 4 + Math.floor(Math.random() * 4),
+        alpha: (profile === 'heavy' ? 0.72 : 0.58) * (0.58 + perspective * 0.42),
+        spriteIndex,
         phase: Math.random() * Math.PI * 2
       });
     }
