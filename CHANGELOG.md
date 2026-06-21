@@ -42,9 +42,11 @@
   - `left: 24.479%`
   - `bottom: 8.444%`
   - `width: 25.573%`
-- Timer text inside the tomato scales from the tomato container via container query units.
+- Timer text inside the tomato scales from the tomato canvas container.
+- Timer and logo debug values now use app-canvas percentages, while clock, controls, and todo keep pixel values.
 - Clock, control information, and todo list retain fixed pixel sizing.
 - Layout debug storage was versioned to `podoromo:debug-layout-v2` so older pixel overrides do not affect the new percentage defaults.
+- Layout debug storage was versioned again to `podoromo:debug-layout-v3` so older pixel timer/logo overrides cannot make canvas-scaled elements oversized.
 
 ### Canvas Scene Renderer
 

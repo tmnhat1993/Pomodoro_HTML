@@ -70,6 +70,25 @@
   gap: 10px;
 }
 
+.debug-weather-control {
+  display: grid;
+  gap: 6px;
+  color: rgba(75, 46, 36, 0.72);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.debug-weather-control select {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: 14px;
+  background: white;
+  color: var(--color-brown);
+  font-weight: 900;
+}
+
 .debug-fieldset {
   display: grid;
   grid-template-columns: minmax(82px, 0.55fr) repeat(3, minmax(84px, 1fr));

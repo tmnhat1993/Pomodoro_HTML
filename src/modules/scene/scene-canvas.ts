@@ -1,19 +1,128 @@
-export type WeatherLayer = 'current' | 'rainNight';
+import { assetPath } from '../assets';
+
+export type WeatherLayer = 'day' | 'night' | 'sunset' | 'dawn' | 'rainDay' | 'rainNight' | 'snowDay' | 'snowNight';
+export type TimeLayer = 'day' | 'night' | 'sunset' | 'dawn';
+export type WeatherCondition = 'clear' | 'rain' | 'snow';
+type ParticleMode = 'none' | 'rain' | 'snow';
+type CloudProfile = 'light' | 'heavy';
 
 const weatherSources: Record<WeatherLayer, string> = {
-  current: '/scene/weather/weather-current.png',
-  rainNight: '/scene/weather/weather-rain-night.png'
+  day: assetPath('scene/weather/window-day.png'),
+  night: assetPath('scene/weather/window-night.png'),
+  sunset: assetPath('scene/weather/window-sunset.png'),
+  dawn: assetPath('scene/weather/window-dawn.png'),
+  rainDay: assetPath('scene/weather/window-rain-day.png'),
+  rainNight: assetPath('scene/weather/window-rain-night.png'),
+  snowDay: assetPath('scene/weather/window-snow-day.png'),
+  snowNight: assetPath('scene/weather/window-snow-night.png')
 };
 
-const roomForegroundSource = '/scene/room-foreground-window-manual-edit.png';
+const cloudProfiles: Record<WeatherLayer, CloudProfile> = {
+  day: 'light',
+  night: 'light',
+  sunset: 'light',
+  dawn: 'light',
+  rainDay: 'heavy',
+  rainNight: 'heavy',
+  snowDay: 'heavy',
+  snowNight: 'heavy'
+};
+
+const weatherConditions: Record<WeatherLayer, WeatherCondition> = {
+  day: 'clear',
+  night: 'clear',
+  sunset: 'clear',
+  dawn: 'clear',
+  rainDay: 'rain',
+  rainNight: 'rain',
+  snowDay: 'snow',
+  snowNight: 'snow'
+};
+
+const cloudColors: Record<WeatherLayer, { fill: string; shadow: string }> = {
+  day: { fill: 'rgba(255, 238, 218, 0.42)', shadow: 'rgba(131, 150, 178, 0.16)' },
+  night: { fill: 'rgba(126, 145, 196, 0.24)', shadow: 'rgba(23, 35, 91, 0.18)' },
+  sunset: { fill: 'rgba(255, 164, 151, 0.34)', shadow: 'rgba(93, 48, 114, 0.18)' },
+  dawn: { fill: 'rgba(255, 221, 188, 0.36)', shadow: 'rgba(107, 131, 181, 0.14)' },
+  rainDay: { fill: 'rgba(205, 216, 229, 0.34)', shadow: 'rgba(46, 68, 96, 0.18)' },
+  rainNight: { fill: 'rgba(82, 104, 152, 0.28)', shadow: 'rgba(6, 18, 55, 0.22)' },
+  snowDay: { fill: 'rgba(245, 248, 252, 0.38)', shadow: 'rgba(151, 165, 184, 0.16)' },
+  snowNight: { fill: 'rgba(151, 171, 214, 0.28)', shadow: 'rgba(17, 32, 74, 0.2)' }
+};
+
+const roomForegroundSource = assetPath('scene/room-foreground-window-manual-edit.png');
+
+const windowViewBox = {
+  x: 719,
+  y: 0,
+  width: 682,
+  height: 527
+};
+
+const rainSlantRatio = -0.62;
+const rainWindRatio = -0.38;
+
+type ImagePlacement = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  scale: number;
+};
+
+type WindowRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+type RainParticle = {
+  x: number;
+  y: number;
+  length: number;
+  speed: number;
+  slant: number;
+  velocityX: number;
+  alpha: number;
+  width: number;
+};
+
+type SnowParticle = {
+  x: number;
+  y: number;
+  radius: number;
+  speed: number;
+  drift: number;
+  phase: number;
+  alpha: number;
+};
+
+type CloudParticle = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+  alpha: number;
+  puffCount: number;
+  phase: number;
+};
 
 export class SceneCanvasRenderer {
   private readonly context: CanvasRenderingContext2D;
   private readonly images = new Map<string, HTMLImageElement>();
   private readonly resizeObserver: ResizeObserver;
-  private weather: WeatherLayer = 'current';
+  private readonly cloudParticles: CloudParticle[] = [];
+  private readonly rainParticles: RainParticle[] = [];
+  private readonly snowParticles: SnowParticle[] = [];
+  private weather: WeatherLayer = 'day';
+  private weatherCondition: WeatherCondition = 'clear';
   private frameId = 0;
   private isDirty = true;
+  private cloudFrameKey = '';
+  private particleFrameKey = '';
+  private previousTimestamp = 0;
 
   constructor(
     private readonly root: HTMLElement,
@@ -46,18 +155,45 @@ export class SceneCanvasRenderer {
 
   setWeather(weather: WeatherLayer): void {
     this.weather = weather;
+    this.weatherCondition = weatherConditions[weather];
     this.root.dataset.weather = weather;
+    this.root.dataset.weatherCondition = this.weatherCondition;
+    this.previousTimestamp = 0;
+    this.cloudFrameKey = '';
+    this.particleFrameKey = '';
     void this.loadImage(weatherSources[weather]).then(() => {
       this.isDirty = true;
     });
   }
 
-  private loop = (): void => {
-    if (this.isDirty) {
+  setScene(timeLayer: TimeLayer, weatherCondition: WeatherCondition): void {
+    this.weather = timeLayer;
+    this.weatherCondition = weatherCondition;
+    this.root.dataset.weather = timeLayer;
+    this.root.dataset.weatherCondition = weatherCondition;
+    this.previousTimestamp = 0;
+    this.cloudFrameKey = '';
+    this.particleFrameKey = '';
+    void this.loadImage(weatherSources[timeLayer]).then(() => {
+      this.isDirty = true;
+    });
+  }
+
+  private loop = (timestamp = 0): void => {
+    const particleMode = this.getParticleMode();
+    const deltaSeconds = Math.min(0.04, Math.max(0.001, (timestamp - this.previousTimestamp) / 1000 || 0.016));
+
+    if (particleMode !== 'none' || this.cloudParticles.length > 0 || this.cloudFrameKey === '') {
+      this.stepClouds(deltaSeconds);
+      this.stepParticles(deltaSeconds);
+      this.draw();
+      this.isDirty = false;
+    } else if (this.isDirty) {
       this.draw();
       this.isDirty = false;
     }
 
+    this.previousTimestamp = timestamp;
     this.frameId = window.requestAnimationFrame(this.loop);
   };
 
@@ -77,19 +213,320 @@ export class SceneCanvasRenderer {
   private draw(): void {
     const { width, height } = this.root.getBoundingClientRect();
     this.context.clearRect(0, 0, width, height);
+
+    const foreground = this.images.get(roomForegroundSource);
+    const foregroundPlacement = this.getCoverPlacement(foreground, width, height);
+    const windowRect = this.getWindowRect(foregroundPlacement);
+    this.drawWindowWeather(this.images.get(weatherSources[this.weather]), foregroundPlacement);
+    this.drawClouds(windowRect);
+    this.drawParticles(windowRect);
     this.drawCover(this.images.get(roomForegroundSource), width, height);
   }
 
   private drawCover(image: HTMLImageElement | undefined, targetWidth: number, targetHeight: number): void {
     if (!image?.complete || !image.naturalWidth || !image.naturalHeight) return;
 
+    const placement = this.getCoverPlacement(image, targetWidth, targetHeight);
+    if (!placement) return;
+
+    this.context.drawImage(image, placement.x, placement.y, placement.width, placement.height);
+  }
+
+  private drawWindowWeather(image: HTMLImageElement | undefined, foregroundPlacement: ImagePlacement | undefined): void {
+    if (!image?.complete || !image.naturalWidth || !image.naturalHeight || !foregroundPlacement) return;
+
+    const windowRect = this.getWindowRect(foregroundPlacement);
+    if (!windowRect) return;
+
+    this.context.drawImage(
+      image,
+      0,
+      0,
+      image.naturalWidth,
+      image.naturalHeight,
+      windowRect.x,
+      windowRect.y,
+      windowRect.width,
+      windowRect.height
+    );
+  }
+
+  private drawParticles(windowRect: WindowRect | undefined): void {
+    const particleMode = this.getParticleMode();
+    if (particleMode === 'none' || !windowRect) return;
+
+    this.ensureParticles(windowRect, particleMode);
+    this.context.save();
+    this.context.beginPath();
+    this.context.rect(windowRect.x, windowRect.y, windowRect.width, windowRect.height);
+    this.context.clip();
+
+    if (particleMode === 'rain') {
+      this.drawRain(windowRect);
+    } else {
+      this.drawSnow(windowRect);
+    }
+
+    this.context.restore();
+  }
+
+  private drawClouds(windowRect: WindowRect | undefined): void {
+    if (!windowRect) return;
+
+    this.ensureClouds(windowRect);
+    this.context.save();
+    this.context.beginPath();
+    this.context.rect(windowRect.x, windowRect.y, windowRect.width, windowRect.height);
+    this.context.clip();
+    this.context.filter = `blur(${Math.max(0.8, windowRect.width * 0.0022)}px)`;
+
+    const colors = cloudColors[this.getEffectWeatherLayer()];
+    for (const cloud of this.cloudParticles) {
+      const x = windowRect.x + cloud.x;
+      const y = windowRect.y + cloud.y;
+
+      this.context.globalAlpha = cloud.alpha;
+      this.context.fillStyle = colors.shadow;
+      this.drawCloudShape(x + cloud.width * 0.04, y + cloud.height * 0.18, cloud);
+
+      this.context.globalAlpha = cloud.alpha;
+      this.context.fillStyle = colors.fill;
+      this.drawCloudShape(x, y, cloud);
+    }
+
+    this.context.filter = 'none';
+    this.context.globalAlpha = 1;
+    this.context.restore();
+  }
+
+  private drawCloudShape(x: number, y: number, cloud: CloudParticle): void {
+    this.context.beginPath();
+
+    for (let index = 0; index < cloud.puffCount; index += 1) {
+      const progress = cloud.puffCount === 1 ? 0.5 : index / (cloud.puffCount - 1);
+      const wobble = Math.sin(cloud.phase + index * 1.73);
+      const puffX = x + cloud.width * (0.08 + progress * 0.84);
+      const puffY = y + cloud.height * (0.42 + wobble * 0.08);
+      const puffWidth = cloud.width * (0.2 + (1 - Math.abs(progress - 0.5) * 1.4) * 0.16);
+      const puffHeight = cloud.height * (0.34 + Math.cos(cloud.phase + index) * 0.06);
+      this.context.ellipse(puffX, puffY, puffWidth, puffHeight, 0, 0, Math.PI * 2);
+    }
+
+    this.context.fill();
+  }
+
+  private drawRain(windowRect: WindowRect): void {
+    this.context.lineCap = 'round';
+
+    for (const particle of this.rainParticles) {
+      const startX = windowRect.x + particle.x;
+      const startY = windowRect.y + particle.y;
+      const endX = startX + particle.slant;
+      const endY = startY + particle.length;
+
+      const gradient = this.context.createLinearGradient(startX, startY, endX, endY);
+      gradient.addColorStop(0, `rgba(229, 244, 255, 0)`);
+      gradient.addColorStop(0.42, `rgba(229, 244, 255, ${particle.alpha})`);
+      gradient.addColorStop(1, `rgba(229, 244, 255, 0)`);
+
+      this.context.strokeStyle = gradient;
+      this.context.lineWidth = particle.width;
+      this.context.beginPath();
+      this.context.moveTo(startX, startY);
+      this.context.lineTo(endX, endY);
+      this.context.stroke();
+    }
+  }
+
+  private drawSnow(windowRect: WindowRect): void {
+    for (const particle of this.snowParticles) {
+      const x = windowRect.x + particle.x + Math.sin(particle.phase) * particle.drift;
+      const y = windowRect.y + particle.y;
+
+      this.context.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
+      this.context.beginPath();
+      this.context.arc(x, y, particle.radius, 0, Math.PI * 2);
+      this.context.fill();
+    }
+  }
+
+  private stepParticles(deltaSeconds: number): void {
+    const particleMode = this.getParticleMode();
+
+    if (particleMode === 'rain') {
+      for (const particle of this.rainParticles) {
+        particle.x += particle.velocityX * deltaSeconds;
+        particle.y += particle.speed * deltaSeconds;
+      }
+    }
+
+    if (particleMode === 'snow') {
+      for (const particle of this.snowParticles) {
+        particle.y += particle.speed * deltaSeconds;
+        particle.phase += deltaSeconds * 1.4;
+      }
+    }
+  }
+
+  private stepClouds(deltaSeconds: number): void {
+    for (const cloud of this.cloudParticles) {
+      cloud.x += cloud.speed * deltaSeconds;
+      cloud.phase += deltaSeconds * 0.08;
+    }
+  }
+
+  private ensureClouds(windowRect: WindowRect): void {
+    const effectWeatherLayer = this.getEffectWeatherLayer();
+    const profile = cloudProfiles[effectWeatherLayer];
+    const frameKey = `${effectWeatherLayer}:${Math.round(windowRect.width)}:${Math.round(windowRect.height)}`;
+
+    if (this.cloudFrameKey === frameKey) {
+      this.wrapClouds(windowRect);
+      return;
+    }
+
+    this.cloudFrameKey = frameKey;
+    this.cloudParticles.length = 0;
+
+    const count = profile === 'heavy' ? 16 : 7;
+    for (let index = 0; index < count; index += 1) {
+      const horizonDepth = Math.random();
+      const y = windowRect.height * (0.06 + horizonDepth * 0.52);
+      const perspective = 1 - horizonDepth * 0.56;
+      const width = windowRect.width * (0.24 + Math.random() * 0.2) * perspective;
+      const height = width * (0.22 + Math.random() * 0.08);
+      const speedBase = profile === 'heavy' ? 13 : 18;
+      const speed = speedBase * (0.35 + perspective * 0.65) * (0.72 + Math.random() * 0.46);
+
+      this.cloudParticles.push({
+        x: Math.random() * (windowRect.width + width * 2) - width,
+        y,
+        width,
+        height,
+        speed,
+        alpha: (profile === 'heavy' ? 0.99 : 0.63) * (0.58 + perspective * 0.42),
+        puffCount: 4 + Math.floor(Math.random() * 4),
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  private ensureParticles(windowRect: WindowRect, particleMode: ParticleMode): void {
+    const frameKey = `${particleMode}:${Math.round(windowRect.width)}:${Math.round(windowRect.height)}`;
+    if (this.particleFrameKey === frameKey) {
+      this.wrapParticles(windowRect, particleMode);
+      return;
+    }
+
+    this.particleFrameKey = frameKey;
+    this.rainParticles.length = 0;
+    this.snowParticles.length = 0;
+
+    if (particleMode === 'rain') {
+      const count = Math.max(120, Math.round((windowRect.width * windowRect.height) / 2800));
+      for (let index = 0; index < count; index += 1) {
+        const speed = 460 + Math.random() * 300;
+        const length = 32 + Math.random() * 28;
+        const angleJitter = 0.92 + Math.random() * 0.16;
+        this.rainParticles.push({
+          x: Math.random() * (windowRect.width + 240) - 120,
+          y: Math.random() * windowRect.height,
+          length,
+          speed,
+          slant: length * rainSlantRatio * angleJitter,
+          velocityX: speed * rainWindRatio * angleJitter,
+          alpha: 0.18 + Math.random() * 0.26,
+          width: 0.8 + Math.random() * 0.8
+        });
+      }
+      return;
+    }
+
+    if (particleMode === 'snow') {
+      const count = Math.max(48, Math.round((windowRect.width * windowRect.height) / 6500));
+      for (let index = 0; index < count; index += 1) {
+        this.snowParticles.push({
+          x: Math.random() * windowRect.width,
+          y: Math.random() * windowRect.height,
+          radius: 1.2 + Math.random() * 2.8,
+          speed: 22 + Math.random() * 58,
+          drift: 6 + Math.random() * 18,
+          phase: Math.random() * Math.PI * 2,
+          alpha: 0.34 + Math.random() * 0.48
+        });
+      }
+    }
+  }
+
+  private wrapClouds(windowRect: WindowRect): void {
+    for (const cloud of this.cloudParticles) {
+      if (cloud.x > windowRect.width + cloud.width) {
+        cloud.x = -cloud.width * (1.2 + Math.random() * 0.8);
+      }
+    }
+  }
+
+  private wrapParticles(windowRect: WindowRect, particleMode: ParticleMode): void {
+    if (particleMode === 'rain') {
+      for (const particle of this.rainParticles) {
+        if (particle.y > windowRect.height + particle.length || particle.x < -120) {
+          particle.x = Math.random() * (windowRect.width + 260) - 80;
+          particle.y = -particle.length - Math.random() * 80;
+        }
+      }
+      return;
+    }
+
+    if (particleMode === 'snow') {
+      for (const particle of this.snowParticles) {
+        if (particle.y > windowRect.height + particle.radius * 2) {
+          particle.x = Math.random() * windowRect.width;
+          particle.y = -particle.radius * 2 - Math.random() * 40;
+          particle.phase = Math.random() * Math.PI * 2;
+        }
+      }
+    }
+  }
+
+  private getWindowRect(foregroundPlacement: ImagePlacement | undefined): WindowRect | undefined {
+    if (!foregroundPlacement) return undefined;
+
+    return {
+      x: foregroundPlacement.x + windowViewBox.x * foregroundPlacement.scale,
+      y: foregroundPlacement.y + windowViewBox.y * foregroundPlacement.scale,
+      width: windowViewBox.width * foregroundPlacement.scale,
+      height: windowViewBox.height * foregroundPlacement.scale
+    };
+  }
+
+  private getParticleMode(): ParticleMode {
+    return this.weatherCondition === 'clear' ? 'none' : this.weatherCondition;
+  }
+
+  private getEffectWeatherLayer(): WeatherLayer {
+    if (this.weatherCondition === 'rain') return this.weather === 'night' ? 'rainNight' : 'rainDay';
+    if (this.weatherCondition === 'snow') return this.weather === 'night' ? 'snowNight' : 'snowDay';
+    return this.weather;
+  }
+
+  private getCoverPlacement(
+    image: HTMLImageElement | undefined,
+    targetWidth: number,
+    targetHeight: number
+  ): ImagePlacement | undefined {
+    if (!image?.complete || !image.naturalWidth || !image.naturalHeight) return undefined;
+
     const scale = Math.max(targetWidth / image.naturalWidth, targetHeight / image.naturalHeight);
     const width = image.naturalWidth * scale;
     const height = image.naturalHeight * scale;
-    const x = (targetWidth - width) / 2;
-    const y = (targetHeight - height) / 2;
 
-    this.context.drawImage(image, x, y, width, height);
+    return {
+      x: (targetWidth - width) / 2,
+      y: (targetHeight - height) / 2,
+      width,
+      height,
+      scale
+    };
   }
 
   private loadImage(source: string): Promise<HTMLImageElement> {

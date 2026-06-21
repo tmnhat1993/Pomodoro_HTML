@@ -1,6 +1,7 @@
 import type { TimerMode, TimerSnapshot } from './timer.types';
+import { assetPath } from '../assets';
 
-const timerBodySource = '/scene/assets/timer-body.png';
+const timerBodySource = assetPath('scene/assets/timer-body.png');
 
 const modeText: Record<TimerMode, string> = {
   focus: 'Focus',

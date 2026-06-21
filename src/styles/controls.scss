@@ -57,7 +57,7 @@
 }
 
 .actions {
-  grid-template-columns: 1.1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .preset-button,
@@ -97,6 +97,23 @@
 .primary-action {
   background: var(--color-green) !important;
   color: white !important;
+}
+
+.icon-action {
+  display: grid;
+  place-items: center;
+  padding: 0 !important;
+}
+
+.icon-action svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.icon-action[data-reset] svg {
+  width: 24px;
+  height: 24px;
 }
 
 .preset-button:hover,

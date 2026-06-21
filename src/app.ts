@@ -1,14 +1,36 @@
 import { ClockView } from './modules/clock/clock.view';
+import { assetPath } from './modules/assets';
 import { setupDebugLayout } from './modules/debug/debug-layout';
 import { NotificationService } from './modules/notifications/notifications';
 import { updateTabTitle } from './modules/notifications/tab-title';
-import { setupSceneCanvas } from './modules/scene/scene-canvas';
+import { setupSceneCanvas, type TimeLayer, type WeatherCondition, type WeatherLayer } from './modules/scene/scene-canvas';
 import { applyTimeTheme } from './modules/scene/scene-theme';
 import { TimerController } from './modules/timer/timer.controller';
 import { TimerStore } from './modules/timer/timer.store';
 import { TimerView } from './modules/timer/timer.view';
 import { TodoStore } from './modules/todo/todo.store';
 import { TodoView } from './modules/todo/todo.view';
+
+type DebugWeatherValue = WeatherLayer | 'auto';
+
+const weatherCycleMs = 10 * 60 * 1000;
+const randomWeatherConditions: WeatherCondition[] = ['clear', 'rain', 'snow'];
+
+function getTimeLayer(date = new Date()): TimeLayer {
+  const hour = date.getHours();
+  if (hour >= 5 && hour < 7) return 'dawn';
+  if (hour >= 17 && hour < 19) return 'sunset';
+  if (hour >= 7 && hour < 17) return 'day';
+  return 'night';
+}
+
+function pickNextWeatherCondition(current: WeatherCondition | undefined): WeatherCondition {
+  const candidates = current
+    ? randomWeatherConditions.filter((condition) => condition !== current)
+    : randomWeatherConditions;
+
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
 
 export function createApp(root: HTMLElement): void {
   root.innerHTML = `
@@ -19,7 +41,7 @@ export function createApp(root: HTMLElement): void {
         </div>
 
         <div class="brand-block" aria-label="Podoromo" data-debug-target="brand">
-          <img class="brand-wordmark" src="/brand/podoromo-wordmark-420.png" alt="Podoromo. Focus. Rest. Repeat." />
+          <img class="brand-wordmark" src="${assetPath('brand/podoromo-wordmark-420.png')}" alt="Podoromo. Focus. Rest. Repeat." />
           <h1 class="sr-only">Podoromo</h1>
         </div>
 
@@ -71,10 +93,28 @@ export function createApp(root: HTMLElement): void {
           </div>
 
           <div class="control-group actions">
-            <button class="primary-action" type="button" data-start aria-label="Start timer">Start</button>
-            <button type="button" data-pause aria-label="Pause timer">Pause</button>
-            <button type="button" data-reset aria-label="Reset timer">Reset</button>
-            <button type="button" data-skip aria-label="Skip session">Skip</button>
+            <button class="primary-action icon-action" type="button" data-start aria-label="Start timer" title="Start timer">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5.5v13l10-6.5-10-6.5Z" />
+              </svg>
+            </button>
+            <button class="icon-action" type="button" data-pause aria-label="Pause timer" title="Pause timer">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" />
+              </svg>
+            </button>
+            <button class="icon-action" type="button" data-reset aria-label="Reset timer" title="Reset timer">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5a7 7 0 1 1-6.32 4H3.35A9 9 0 1 0 12 3v2Z" />
+                <path d="M4 4v5h5L4 4Z" />
+              </svg>
+            </button>
+            <button class="icon-action" type="button" data-skip aria-label="Skip session" title="Skip session">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 5.5v13l8.5-6.5L5 5.5Z" />
+                <path d="M14 5.5v13l5-6.5-5-6.5Z" />
+              </svg>
+            </button>
           </div>
         </section>
 
@@ -144,10 +184,24 @@ export function createApp(root: HTMLElement): void {
             <div class="debug-header">
               <div>
                 <h2 id="debug-title">Debug layout</h2>
-                <p>Adjust the major elements with pixel values.</p>
+                <p>Timer and logo use app-canvas percentages; other panels use pixels.</p>
               </div>
               <button class="icon-button" type="button" data-debug-close aria-label="Close debug">×</button>
             </div>
+            <label class="debug-weather-control">
+              Weather layer
+              <select data-debug-weather>
+                <option value="auto">Auto</option>
+                <option value="day">Ban ngày</option>
+                <option value="night">Ban đêm</option>
+                <option value="sunset">Hoàng hôn</option>
+                <option value="dawn">Bình minh</option>
+                <option value="rainDay">Mưa ngày</option>
+                <option value="rainNight">Mưa đêm</option>
+                <option value="snowDay">Tuyết ngày</option>
+                <option value="snowNight">Tuyết đêm</option>
+              </select>
+            </label>
             <form class="debug-form" data-debug-form></form>
             <label class="debug-output">
               Current values
@@ -173,7 +227,7 @@ export function createApp(root: HTMLElement): void {
   const canvas = root.querySelector<HTMLElement>('.app-canvas')!;
   const sceneCanvas = root.querySelector<HTMLCanvasElement>('[data-scene-canvas]')!;
   applyTimeTheme(canvas);
-  setupSceneCanvas(canvas, sceneCanvas).setWeather('current');
+  const sceneRenderer = setupSceneCanvas(canvas, sceneCanvas);
 
   const timerStore = new TimerStore();
   const todoStore = new TodoStore();
@@ -217,6 +271,7 @@ export function createApp(root: HTMLElement): void {
   const settingsDialog = root.querySelector<HTMLDialogElement>('[data-settings-dialog]')!;
   const settingsOpenButton = root.querySelector<HTMLButtonElement>('[data-settings-open]')!;
   const settingsCloseButton = root.querySelector<HTMLButtonElement>('[data-settings-close]')!;
+  const debugWeatherSelect = root.querySelector<HTMLSelectElement>('[data-debug-weather]')!;
   const controlSummary = root.querySelector<HTMLElement>('[data-control-summary]')!;
   const mobileNotice = root.querySelector<HTMLElement>('[data-mobile-notice]')!;
   const mobileNoticeCloseButton = root.querySelector<HTMLButtonElement>('[data-mobile-notice-close]')!;
@@ -227,6 +282,60 @@ export function createApp(root: HTMLElement): void {
     updateTabTitle(snapshot.state.mode, snapshot.remainingMs, snapshot.state.status === 'completed');
   });
   todoStore.subscribe((items) => todoView.render(items));
+
+  const automaticScene = (() => {
+    let isEnabled = true;
+    let activeWeatherBlock = -1;
+    let activeWeatherCondition: WeatherCondition | undefined;
+    let appliedSceneKey = '';
+
+    const sync = (): void => {
+      if (!isEnabled) return;
+
+      const now = new Date();
+      const weatherBlock = Math.floor(now.getTime() / weatherCycleMs);
+      if (weatherBlock !== activeWeatherBlock) {
+        activeWeatherCondition = pickNextWeatherCondition(activeWeatherCondition);
+        activeWeatherBlock = weatherBlock;
+      }
+
+      const timeLayer = getTimeLayer(now);
+      const weatherCondition = activeWeatherCondition ?? 'clear';
+      const sceneKey = `${timeLayer}:${weatherCondition}`;
+      if (sceneKey === appliedSceneKey) return;
+
+      sceneRenderer.setScene(timeLayer, weatherCondition);
+      appliedSceneKey = sceneKey;
+      debugWeatherSelect.value = 'auto';
+    };
+
+    const intervalId = window.setInterval(sync, 30_000);
+    sync();
+
+    return {
+      setEnabled(enabled: boolean): void {
+        isEnabled = enabled;
+        if (enabled) {
+          appliedSceneKey = '';
+          sync();
+        }
+      },
+      stop(): void {
+        window.clearInterval(intervalId);
+      }
+    };
+  })();
+
+  debugWeatherSelect.addEventListener('change', () => {
+    const value = debugWeatherSelect.value as DebugWeatherValue;
+    if (value === 'auto') {
+      automaticScene.setEnabled(true);
+      return;
+    }
+
+    automaticScene.setEnabled(false);
+    sceneRenderer.setWeather(value);
+  });
 
   settingsOpenButton.addEventListener('click', () => {
     if (!settingsDialog.open) {

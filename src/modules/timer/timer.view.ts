@@ -51,7 +51,9 @@ export class TimerView {
     this.elements.dailyCycles.textContent = `${snapshot.dailyCycles.completedCycles} cycle${
       snapshot.dailyCycles.completedCycles === 1 ? '' : 's'
     } today`;
-    this.elements.startButton.textContent = state.status === 'paused' ? 'Resume' : 'Start';
+    const startLabel = state.status === 'paused' ? 'Resume timer' : 'Start timer';
+    this.elements.startButton.setAttribute('aria-label', startLabel);
+    this.elements.startButton.title = startLabel;
     this.elements.startButton.disabled = state.status === 'running';
     this.elements.pauseButton.disabled = state.status !== 'running';
     this.elements.resetButton.disabled = state.status === 'idle';
