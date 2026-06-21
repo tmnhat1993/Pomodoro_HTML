@@ -12,8 +12,8 @@ const modeText: Record<TimerMode, string> = {
 const defaultRingConfig = {
   size: 25,
   thickness: 2.2,
-  x: 50.9,
-  y: 52.9
+  x: 51.3,
+  y: 53
 };
 
 function formatDuration(ms: number): string {
