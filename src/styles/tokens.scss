@@ -1,0 +1,24 @@
+:root {
+  --color-tomato: #ef4b3e;
+  --color-tomato-dark: #c93d31;
+  --color-cream: #fff4e2;
+  --color-cream-deep: #f7d8ad;
+  --color-wood: #c98545;
+  --color-wood-dark: #8f552f;
+  --color-brown: #4b2e24;
+  --color-green: #4f9a4a;
+  --color-mint: #a4d4a1;
+  --color-sky: #87c8de;
+  --color-night: #4b3c8a;
+  --color-dusk: #8f70b8;
+  --radius-card: 24px;
+  --radius-control: 16px;
+  --shadow-soft: 0 12px 30px rgba(75, 46, 36, 0.16);
+  --shadow-bold: 0 20px 50px rgba(75, 46, 36, 0.22);
+  --scene-aspect: 1920 / 900;
+  --scene-width: min(100vw, calc(100svh * 1920 / 900));
+  --scene-height: min(100svh, calc(100vw * 900 / 1920));
+  --logo-x: 3.333%;
+  --logo-y: 4%;
+  --logo-width: 21.875%;
+}

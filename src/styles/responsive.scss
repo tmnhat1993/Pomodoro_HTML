@@ -1,0 +1,167 @@
+@media (max-width: 1180px) {
+  .control-bar {
+    width: var(--debug-width, 340px);
+  }
+
+  .todo-panel {
+    width: var(--debug-width, 310px);
+  }
+}
+
+@media (max-width: 900px) {
+  .brand-block {
+    position: absolute;
+    top: var(--logo-y);
+    left: var(--logo-x);
+    z-index: 20;
+    width: var(--debug-width, var(--logo-width));
+    padding: 0;
+  }
+
+  .brand-wordmark {
+    width: 100%;
+  }
+
+  .tomato-timer {
+    left: 24.479%;
+    bottom: 8.444%;
+    width: var(--debug-width, 25.573%);
+    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
+  }
+
+  .digital-clock {
+    top: 14px;
+    right: 14px;
+    min-width: 148px;
+    padding: 10px 14px;
+    border-width: 3px;
+    border-radius: 16px;
+  }
+
+  .digital-clock span {
+    font-size: 1.14rem;
+  }
+
+  .digital-clock small {
+    font-size: 0.62rem;
+  }
+
+  .control-bar {
+    left: 88px;
+    bottom: 40px;
+    width: var(--debug-width, 340px);
+    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
+  }
+
+  .mode-switch,
+  .actions {
+    width: 100%;
+  }
+
+  .settings-dialog {
+    width: min(620px, calc(var(--scene-width) - 24px));
+  }
+
+  .actions {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .todo-panel {
+    top: auto;
+    right: 50%;
+    bottom: 0;
+    width: var(--debug-width, 560px);
+    max-height: 520px;
+    padding-bottom: 24px;
+    transform: translate(50%, 105%) translate(var(--debug-x, 0), var(--debug-y, 0));
+    border-radius: 28px 28px 0 0;
+    transition: transform 220ms ease;
+  }
+
+  .todo-panel.is-open {
+    transform: translate(50%, 0) translate(var(--debug-x, 0), var(--debug-y, 0));
+  }
+
+  .todo-panel .todo-close {
+    display: grid;
+  }
+
+  .todo-fab {
+    position: absolute;
+    z-index: 50;
+    right: 18px;
+    bottom: 238px;
+    display: grid;
+    border-radius: 50%;
+    background: var(--color-tomato);
+    color: white;
+    box-shadow: var(--shadow-bold);
+  }
+
+  .drawer-backdrop {
+    position: absolute;
+    z-index: 35;
+    inset: 0;
+    display: block;
+    background: rgba(75, 46, 36, 0.22);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .brand-block {
+    width: var(--debug-width, var(--logo-width));
+    padding: 0;
+  }
+
+  .brand-wordmark {
+    width: 100%;
+  }
+
+  .tomato-timer {
+    bottom: 8.444%;
+    width: var(--debug-width, 25.573%);
+  }
+
+  .control-bar {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .control-header {
+    align-items: center;
+  }
+
+  .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings-panel {
+    gap: 16px;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .presets,
+  .custom-form,
+  .toggles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toast-root {
+    top: 12px;
+    right: 12px;
+  }
+
+  .todo-fab {
+    bottom: 252px;
+  }
+}

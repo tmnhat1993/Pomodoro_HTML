@@ -1,0 +1,158 @@
+.debug-open {
+  position: absolute;
+  z-index: 75;
+  top: 96px;
+  right: 18px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 2px solid rgba(75, 46, 36, 0.2);
+  border-radius: 12px;
+  background: rgba(45, 42, 48, 0.94);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(75, 46, 36, 0.2);
+}
+
+.debug-dialog {
+  width: min(760px, calc(var(--scene-width) - 24px));
+  max-height: min(820px, calc(var(--scene-height) - 24px));
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--color-brown);
+}
+
+.debug-dialog::backdrop {
+  background: rgba(45, 42, 48, 0.34);
+  backdrop-filter: blur(3px);
+}
+
+.debug-panel {
+  display: grid;
+  gap: 16px;
+  max-height: min(820px, calc(var(--scene-height) - 24px));
+  padding: 20px;
+  overflow: auto;
+  border: 3px solid rgba(75, 46, 36, 0.16);
+  border-radius: 22px;
+  background: rgba(255, 244, 226, 0.98);
+  box-shadow: var(--shadow-bold);
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.debug-header h2,
+.debug-header p {
+  margin: 0;
+}
+
+.debug-header h2 {
+  font-size: 1.35rem;
+}
+
+.debug-header p {
+  margin-top: 4px;
+  color: rgba(75, 46, 36, 0.66);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.debug-form {
+  display: grid;
+  gap: 10px;
+}
+
+.debug-fieldset {
+  display: grid;
+  grid-template-columns: minmax(82px, 0.55fr) repeat(3, minmax(84px, 1fr));
+  gap: 8px;
+  align-items: end;
+  min-width: 0;
+  padding: 10px;
+  border: 2px solid rgba(75, 46, 36, 0.12);
+  border-radius: 16px;
+  background: white;
+}
+
+.debug-fieldset legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  font-weight: 900;
+}
+
+.debug-fieldset label {
+  display: grid;
+  gap: 5px;
+  color: rgba(75, 46, 36, 0.72);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.debug-fieldset input {
+  width: 100%;
+  min-height: 38px;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: 12px;
+  color: var(--color-brown);
+  font-weight: 900;
+  text-align: center;
+}
+
+.debug-output {
+  display: grid;
+  gap: 8px;
+  color: rgba(75, 46, 36, 0.72);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.debug-output textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 12px;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: 14px;
+  background: #2d2a30;
+  color: #e4ffd7;
+  font: 0.78rem/1.45 "SFMono-Regular", Consolas, monospace;
+  resize: vertical;
+}
+
+.debug-reset {
+  min-height: 42px;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: 14px;
+  background: white;
+  color: var(--color-brown);
+  font-weight: 900;
+}
+
+@media (max-width: 560px) {
+  .debug-open {
+    top: 72px;
+    right: 14px;
+  }
+
+  .debug-panel {
+    padding: 16px;
+  }
+
+  .debug-fieldset {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .debug-fieldset legend {
+    grid-column: 1 / -1;
+  }
+}

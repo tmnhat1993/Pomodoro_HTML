@@ -1,0 +1,309 @@
+.control-bar {
+  position: absolute;
+  z-index: 30;
+  left: 88px;
+  bottom: 40px;
+  display: grid;
+  gap: 12px;
+  width: var(--debug-width, 360px);
+  padding: 14px;
+  border: 3px solid rgba(75, 46, 36, 0.16);
+  border-radius: var(--radius-card);
+  background: rgba(255, 244, 226, 0.93);
+  box-shadow: var(--shadow-bold);
+  backdrop-filter: blur(14px);
+  transform: translate(var(--debug-x, 0), var(--debug-y, 0));
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.control-header span {
+  display: block;
+  color: rgba(75, 46, 36, 0.68);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.control-header strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 1.05rem;
+}
+
+.daily-cycles {
+  display: block;
+  margin-top: 3px;
+  color: rgba(75, 46, 36, 0.66);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.control-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mode-switch,
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.actions {
+  grid-template-columns: 1.1fr 1fr 1fr 1fr;
+}
+
+.preset-button,
+.preset-delete,
+.mode-switch button,
+.actions button,
+.custom-form button,
+.add-custom-time-button,
+.restore-presets-button,
+.settings-button {
+  min-height: 44px;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: var(--radius-control);
+  background: white;
+  color: var(--color-brown);
+  font-weight: 900;
+  box-shadow: 0 5px 0 rgba(75, 46, 36, 0.08);
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.mode-switch button,
+.actions button,
+.custom-form button,
+.add-custom-time-button,
+.restore-presets-button,
+.settings-button {
+  padding: 0 14px;
+}
+
+.settings-button {
+  min-height: 40px;
+  background: #fff9ef;
+}
+
+.primary-action {
+  background: var(--color-green) !important;
+  color: white !important;
+}
+
+.preset-button:hover,
+.preset-delete:hover,
+.mode-switch button:hover,
+.actions button:hover,
+.custom-form button:hover,
+.add-custom-time-button:hover,
+.restore-presets-button:hover,
+.settings-button:hover {
+  transform: translateY(-1px);
+}
+
+.mode-switch button.is-active {
+  background: var(--color-tomato);
+  color: white;
+}
+
+.settings-dialog {
+  width: min(620px, calc(var(--scene-width) - 28px));
+  max-height: min(760px, calc(var(--scene-height) - 28px));
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 28px;
+  background: transparent;
+  color: var(--color-brown);
+}
+
+.settings-dialog::backdrop {
+  background: rgba(75, 46, 36, 0.32);
+  backdrop-filter: blur(4px);
+}
+
+.settings-panel {
+  display: grid;
+  gap: 20px;
+  max-height: min(760px, calc(var(--scene-height) - 28px));
+  padding: 24px;
+  overflow: auto;
+  border: 3px solid rgba(75, 46, 36, 0.16);
+  border-radius: 28px;
+  background: rgba(255, 244, 226, 0.98);
+  box-shadow: var(--shadow-bold);
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.settings-header h2,
+.settings-header p,
+.settings-section h3 {
+  margin: 0;
+}
+
+.settings-header h2 {
+  font-size: 1.65rem;
+}
+
+.settings-header p {
+  margin-top: 5px;
+  color: rgba(75, 46, 36, 0.68);
+  font-weight: 800;
+}
+
+.settings-section {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.settings-section h3 {
+  color: rgba(75, 46, 36, 0.75);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.preset-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+
+.preset-button {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  width: 100%;
+  padding: 10px;
+  padding-right: 36px;
+  text-align: left;
+}
+
+.preset-button small {
+  overflow: hidden;
+  font-size: 0.68rem;
+  opacity: 0.66;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preset-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border-radius: 10px;
+  color: var(--color-tomato-dark);
+  line-height: 1;
+}
+
+.add-custom-time-button,
+.restore-presets-button {
+  background: #fff9ef;
+}
+
+.restore-presets-button {
+  min-height: 34px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+}
+
+.custom-form-panel[hidden] {
+  display: none;
+}
+
+.custom-form {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.custom-form label {
+  display: grid;
+  gap: 6px;
+  color: rgba(75, 46, 36, 0.72);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.custom-form input {
+  width: 100%;
+  min-height: 46px;
+  border: 2px solid rgba(75, 46, 36, 0.18);
+  border-radius: 14px;
+  background: white;
+  color: var(--color-brown);
+  font-weight: 900;
+  text-align: center;
+}
+
+.custom-form button {
+  grid-column: 1 / -1;
+}
+
+.form-error {
+  grid-column: 1 / -1;
+  min-height: 1em;
+  margin: -2px 0 0;
+  color: var(--color-tomato-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.toggles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 2px solid rgba(75, 46, 36, 0.12);
+  border-radius: 16px;
+  background: white;
+  color: rgba(75, 46, 36, 0.82);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-green);
+}

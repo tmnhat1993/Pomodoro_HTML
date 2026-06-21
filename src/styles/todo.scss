@@ -1,0 +1,150 @@
+.todo-panel {
+  position: absolute;
+  z-index: 40;
+  right: 42px;
+  bottom: 44px;
+  display: grid;
+  gap: 16px;
+  width: var(--debug-width, 380px);
+  max-height: 520px;
+  padding: 20px;
+  overflow: auto;
+  border: 3px solid rgba(75, 46, 36, 0.16);
+  border-radius: var(--radius-card);
+  background: rgba(255, 244, 226, 0.94);
+  box-shadow: var(--shadow-bold);
+  backdrop-filter: blur(16px);
+  transform: translate(var(--debug-x, 0), var(--debug-y, 0));
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.panel-header h2 {
+  font-size: 1.45rem;
+}
+
+.panel-header p {
+  margin-top: 4px;
+  color: rgba(75, 46, 36, 0.68);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.todo-close {
+  display: none;
+}
+
+.todo-form {
+  display: grid;
+  gap: 8px;
+}
+
+.todo-form label {
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.todo-form div {
+  display: grid;
+  grid-template-columns: 1fr 46px;
+  gap: 8px;
+}
+
+.todo-form input {
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 2px solid rgba(75, 46, 36, 0.18);
+  border-radius: 16px;
+  background: white;
+  color: var(--color-brown);
+}
+
+.todo-form button,
+.icon-button,
+.todo-fab,
+.todo-check {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 2px solid rgba(75, 46, 36, 0.16);
+  border-radius: 14px;
+  background: white;
+  color: var(--color-brown);
+  font-weight: 900;
+}
+
+.todo-form button {
+  background: var(--color-tomato);
+  color: white;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 16px;
+  border: 2px dashed rgba(75, 46, 36, 0.18);
+  border-radius: 18px;
+  color: rgba(75, 46, 36, 0.66);
+  font-weight: 800;
+  text-align: center;
+}
+
+.todo-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px 44px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid rgba(75, 46, 36, 0.12);
+  border-radius: 18px;
+  background: white;
+}
+
+.todo-item span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.todo-item.is-completed span {
+  opacity: 0.58;
+  text-decoration: line-through;
+}
+
+.todo-item.is-pinned {
+  border-color: rgba(239, 75, 62, 0.38);
+  background: #fff8ed;
+}
+
+.todo-check {
+  border-radius: 50%;
+  color: white;
+}
+
+.todo-item.is-completed .todo-check {
+  background: var(--color-green);
+}
+
+.todo-fab,
+.drawer-backdrop {
+  display: none;
+}
+
+.todo-panel .todo-close {
+  display: none;
+}

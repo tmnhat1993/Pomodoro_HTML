@@ -1,0 +1,9 @@
+node_modules/
+dist/
+tmp/
+
+.DS_Store
+public/.DS_Store
+
+qa-*.png
+room-foreground-window-cutout-v2-manual-edit.png
