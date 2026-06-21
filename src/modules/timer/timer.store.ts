@@ -221,7 +221,7 @@ export class TimerStore {
     const completedFocusSessions =
       this.state.mode === 'focus' ? this.state.completedFocusSessions + 1 : this.state.completedFocusSessions;
     const nextMode: TimerMode = this.state.mode === 'focus' ? 'shortBreak' : 'focus';
-    const shouldAutoStart = this.state.mode === 'focus' || (nextMode === 'focus' ? this.settings.autoStartFocus : this.settings.autoStartBreak);
+    const shouldAutoStart = true;
 
     this.state = {
       mode: nextMode,

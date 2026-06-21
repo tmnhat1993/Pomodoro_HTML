@@ -182,7 +182,7 @@ export class SceneCanvasRenderer {
     this.previousTimestamp = 0;
     this.cloudFrameKey = '';
     this.particleFrameKey = '';
-    void this.loadImage(weatherSources[timeLayer]).then(() => {
+    void this.loadImage(weatherSources[this.getEffectWeatherLayer()]).then(() => {
       this.isDirty = true;
     });
   }
@@ -225,7 +225,7 @@ export class SceneCanvasRenderer {
     const foreground = this.images.get(roomForegroundSource);
     const foregroundPlacement = this.getCoverPlacement(foreground, width, height);
     const windowRect = this.getWindowRect(foregroundPlacement);
-    this.drawWindowWeather(this.images.get(weatherSources[this.weather]), foregroundPlacement);
+    this.drawWindowWeather(this.images.get(weatherSources[this.getEffectWeatherLayer()]), foregroundPlacement);
     this.drawClouds(windowRect);
     this.drawParticles(windowRect);
     this.drawCover(this.images.get(roomForegroundSource), width, height);

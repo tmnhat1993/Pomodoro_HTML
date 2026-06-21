@@ -117,8 +117,8 @@ export class TimerCanvasRenderer {
     const remainingRatio = snapshot.state.status === 'idle' ? 1 : Math.max(0, Math.min(1, snapshot.remainingMs / durationMs));
     const centerX = width * 0.5;
     const centerY = height * 0.53;
-    const radius = width * 0.322;
-    const lineWidth = width * 0.032;
+    const radius = width * 0.326;
+    const lineWidth = width * 0.041;
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + Math.PI * 2 * remainingRatio;
 
@@ -126,7 +126,7 @@ export class TimerCanvasRenderer {
     this.context.lineCap = 'round';
     this.context.lineWidth = lineWidth;
 
-    this.context.strokeStyle = 'rgba(255, 232, 190, 0.68)';
+    this.context.strokeStyle = 'rgba(255, 247, 224, 0.96)';
     this.context.beginPath();
     this.context.arc(centerX, centerY, radius, 0, Math.PI * 2);
     this.context.stroke();
@@ -138,13 +138,13 @@ export class TimerCanvasRenderer {
         centerX + radius,
         centerY + radius
       );
-      gradient.addColorStop(0, '#fff3cf');
-      gradient.addColorStop(0.48, '#f6b456');
-      gradient.addColorStop(1, '#ef4b3e');
+      gradient.addColorStop(0, '#ff7f63');
+      gradient.addColorStop(0.52, '#ef4b3e');
+      gradient.addColorStop(1, '#cf352d');
 
       this.context.strokeStyle = gradient;
-      this.context.shadowColor = 'rgba(239, 75, 62, 0.32)';
-      this.context.shadowBlur = width * 0.016;
+      this.context.shadowColor = 'rgba(207, 53, 45, 0.26)';
+      this.context.shadowBlur = width * 0.01;
       this.context.beginPath();
       this.context.arc(centerX, centerY, radius, startAngle, endAngle);
       this.context.stroke();
