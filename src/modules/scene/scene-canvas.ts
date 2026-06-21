@@ -376,7 +376,7 @@ export class SceneCanvasRenderer {
     this.cloudFrameKey = frameKey;
     this.cloudParticles.length = 0;
 
-    const count = profile === 'heavy' ? 12 : 6;
+    const count = profile === 'heavy' ? 24 : 6;
     for (let index = 0; index < count; index += 1) {
       const horizonDepth = Math.random();
       const y = windowRect.height * (0.06 + horizonDepth * 0.52);
