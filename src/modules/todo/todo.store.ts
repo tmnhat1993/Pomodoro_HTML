@@ -1,7 +1,7 @@
 import { readStorage, writeStorage } from '../storage/local-storage';
 import type { TodoItem } from './todo.types';
 
-const TODO_KEY = 'podoromo:todos';
+const TODO_KEY = 'pomodoro:todos';
 
 type TodoListener = (items: TodoItem[]) => void;
 

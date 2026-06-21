@@ -60,7 +60,7 @@ export class TimerCanvasRenderer {
 
   start(): void {
     this.resizeObserver.observe(this.root);
-    this.root.addEventListener('podoromo:timer-ring-debug-change', this.handleRingDebugChange);
+    this.root.addEventListener('pomodoro:timer-ring-debug-change', this.handleRingDebugChange);
     this.resizeCanvas();
   }
 
@@ -77,7 +77,7 @@ export class TimerCanvasRenderer {
 
   stop(): void {
     this.resizeObserver.disconnect();
-    this.root.removeEventListener('podoromo:timer-ring-debug-change', this.handleRingDebugChange);
+    this.root.removeEventListener('pomodoro:timer-ring-debug-change', this.handleRingDebugChange);
   }
 
   private resizeCanvas(): void {

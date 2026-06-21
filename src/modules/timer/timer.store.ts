@@ -1,10 +1,10 @@
 import { readStorage, writeStorage } from '../storage/local-storage';
 import type { DailyCycles, Preset, TimerMode, TimerSettings, TimerSnapshot, TimerState } from './timer.types';
 
-const SETTINGS_KEY = 'podoromo:timer-settings';
-const STATE_KEY = 'podoromo:timer-state';
-const DAILY_CYCLES_KEY = 'podoromo:daily-cycles';
-const PRESETS_KEY = 'podoromo:presets';
+const SETTINGS_KEY = 'pomodoro:timer-settings';
+const STATE_KEY = 'pomodoro:timer-state';
+const DAILY_CYCLES_KEY = 'pomodoro:daily-cycles';
+const PRESETS_KEY = 'pomodoro:presets';
 
 export const DEFAULT_PRESETS: Preset[] = [
   { id: 'classic', label: '25 / 5', focusMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, sessionsBeforeLongBreak: 4 },

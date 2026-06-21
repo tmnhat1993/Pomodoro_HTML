@@ -34,15 +34,15 @@ function pickNextWeatherCondition(current: WeatherCondition | undefined): Weathe
 
 export function createApp(root: HTMLElement): void {
   root.innerHTML = `
-    <main class="app-shell" aria-label="Podoromo app">
+    <main class="app-shell" aria-label="Pomodoro app">
       <section class="app-canvas">
         <div class="scene-stack" aria-hidden="true">
           <canvas class="scene-canvas" data-scene-canvas></canvas>
         </div>
 
-        <div class="brand-block" aria-label="Podoromo" data-debug-target="brand">
-          <img class="brand-wordmark" src="${assetPath('brand/podoromo-wordmark-420.png')}" alt="Podoromo. Focus. Rest. Repeat." />
-          <h1 class="sr-only">Podoromo</h1>
+        <div class="brand-block" aria-label="Pomodoro" data-debug-target="brand">
+          <img class="brand-wordmark" src="${assetPath('brand/pomodoro-wordmark-420.png')}" alt="Pomodoro. Focus. Rest. Repeat." />
+          <h1 class="sr-only">Pomodoro</h1>
         </div>
 
         <article class="tomato-timer" aria-label="Timer" data-debug-target="timer">
@@ -216,7 +216,7 @@ export function createApp(root: HTMLElement): void {
       <aside class="mobile-notice" data-mobile-notice role="dialog" aria-labelledby="mobile-notice-title" aria-modal="true">
         <div class="mobile-notice-panel">
           <h2 id="mobile-notice-title">Desktop recommended</h2>
-          <p>Ứng dụng này hoạt động tốt nhất trên trình duyệt desktop. Cảm ơn bạn đã ghé qua Podoromo.</p>
+          <p>Ứng dụng này hoạt động tốt nhất trên trình duyệt desktop. Cảm ơn bạn đã ghé qua Pomodoro.</p>
           <button type="button" data-mobile-notice-close>Đã hiểu</button>
         </div>
       </aside>

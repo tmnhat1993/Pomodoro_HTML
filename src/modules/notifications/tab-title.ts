@@ -8,5 +8,5 @@ const modeLabel: Record<TimerMode, string> = {
 };
 
 export function updateTabTitle(mode: TimerMode, remainingMs: number, completed = false): void {
-  document.title = completed ? 'Done - Podoromo' : `${formatDuration(remainingMs)} - ${modeLabel[mode]}`;
+  document.title = completed ? 'Done - Pomodoro' : `${formatDuration(remainingMs)} - ${modeLabel[mode]}`;
 }

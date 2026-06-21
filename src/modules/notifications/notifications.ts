@@ -51,7 +51,7 @@ export class NotificationService {
     }
 
     if (browserNotificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
-      new Notification('Podoromo', { body: message });
+      new Notification('Pomodoro', { body: message });
     }
   }
 }

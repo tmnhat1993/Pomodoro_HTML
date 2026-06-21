@@ -1,6 +1,6 @@
-# Podoromo
+# Pomodoro
 
-Podoromo is a cozy, responsive Pomodoro web app built with Vite, TypeScript, and SCSS. It uses a modular vanilla frontend, localStorage persistence, timestamp-based timer logic, todos, a digital desk clock, tab title updates, toast notifications, and a soft generated alert sound.
+Pomodoro is a cozy, responsive Pomodoro web app built with Vite, TypeScript, and SCSS. It uses a modular vanilla frontend, localStorage persistence, timestamp-based timer logic, todos, a digital desk clock, tab title updates, toast notifications, and a soft generated alert sound.
 
 ## Run Locally
 

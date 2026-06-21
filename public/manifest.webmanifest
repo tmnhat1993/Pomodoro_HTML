@@ -1,6 +1,6 @@
 {
-  "name": "Podoromo",
-  "short_name": "Podoromo",
+  "name": "Pomodoro",
+  "short_name": "Pomodoro",
   "description": "A cozy 2D Pomodoro timer for focus sessions and lightweight todos.",
   "start_url": ".",
   "display": "standalone",
@@ -8,13 +8,13 @@
   "theme_color": "#ef4b3e",
   "icons": [
     {
-      "src": "icons/podoromo-logo-192.png",
+      "src": "icons/pomodoro-logo-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/podoromo-logo-512.png",
+      "src": "icons/pomodoro-logo-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

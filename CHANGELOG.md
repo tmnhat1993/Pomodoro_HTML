@@ -1,4 +1,4 @@
-# Podoromo Changelog
+# Pomodoro Changelog
 
 ## 2026-06-21
 
@@ -17,19 +17,19 @@
 
 ### Mobile Notice
 
-- Mobile and coarse-pointer viewports now show a popup explaining that Podoromo works best on desktop browsers.
+- Mobile and coarse-pointer viewports now show a popup explaining that Pomodoro works best on desktop browsers.
 - The message thanks the user for visiting and can be dismissed with one button.
 
 ### Daily Cycle Counter
 
-- Added a per-device daily Podoromo cycle counter.
+- Added a per-device daily Pomodoro cycle counter.
 - A completed focus + break cycle increments the counter by 1 when the break session finishes.
-- The count is stored in `localStorage` under `podoromo:daily-cycles` and resets automatically when the local calendar date changes.
+- The count is stored in `localStorage` under `pomodoro:daily-cycles` and resets automatically when the local calendar date changes.
 - The control card now shows today's completed cycle count.
 
 ### Preset Management
 
-- Timer presets are now persisted in `localStorage` under `podoromo:presets`.
+- Timer presets are now persisted in `localStorage` under `pomodoro:presets`.
 - Default presets can be deleted by the user.
 - A restore defaults action brings the original preset list back.
 - Custom time entry is hidden behind the `Add your custom time` button.
@@ -45,8 +45,8 @@
 - Timer text inside the tomato scales from the tomato canvas container.
 - Timer and logo debug values now use app-canvas percentages, while clock, controls, and todo keep pixel values.
 - Clock, control information, and todo list retain fixed pixel sizing.
-- Layout debug storage was versioned to `podoromo:debug-layout-v2` so older pixel overrides do not affect the new percentage defaults.
-- Layout debug storage was versioned again to `podoromo:debug-layout-v3` so older pixel timer/logo overrides cannot make canvas-scaled elements oversized.
+- Layout debug storage was versioned to `pomodoro:debug-layout-v2` so older pixel overrides do not affect the new percentage defaults.
+- Layout debug storage was versioned again to `pomodoro:debug-layout-v3` so older pixel timer/logo overrides cannot make canvas-scaled elements oversized.
 
 ### Canvas Scene Renderer
 
@@ -85,7 +85,7 @@
 
 ### Current State
 
-- Built the Podoromo MVP as a Vite + TypeScript + SCSS app.
+- Built the Pomodoro MVP as a Vite + TypeScript + SCSS app.
 - Timer, presets, custom durations, todo list, localStorage, tab title updates, toast, sound toggle, notification toggle, and digital clock are implemented.
 - App runs at `http://127.0.0.1:5173/`.
 - `npm run build` passes.
@@ -102,8 +102,8 @@
 - The tomato timer body is a transparent PNG:
   - `public/scene/assets/timer-body.png`
 - Logo and favicon assets are PNG:
-  - `public/brand/podoromo-wordmark.png`
-  - `public/icons/podoromo-logo-*.png`
+  - `public/brand/pomodoro-wordmark.png`
+  - `public/icons/pomodoro-logo-*.png`
 
 ### Layout Changes
 

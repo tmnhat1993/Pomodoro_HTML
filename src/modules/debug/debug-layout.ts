@@ -28,7 +28,7 @@ type DebugTarget = {
   unit: 'px' | '%';
 };
 
-const STORAGE_KEY = 'podoromo:debug-layout-v3';
+const STORAGE_KEY = 'pomodoro:debug-layout-v3';
 const TIMER_RING_DEFAULTS: TimerRingValue = {
   size: 25,
   thickness: 2.2,
@@ -97,7 +97,7 @@ export function setupDebugLayout(root: HTMLElement): void {
     timerElement.style.setProperty('--timer-ring-thickness', `${value.thickness}`);
     timerElement.style.setProperty('--timer-ring-x', `${value.x}`);
     timerElement.style.setProperty('--timer-ring-y', `${value.y}`);
-    timerElement.dispatchEvent(new Event('podoromo:timer-ring-debug-change'));
+    timerElement.dispatchEvent(new Event('pomodoro:timer-ring-debug-change'));
   };
 
   const applyTarget = (target: DebugTarget): void => {
