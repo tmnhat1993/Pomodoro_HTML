@@ -20,9 +20,9 @@ export class TimerController {
       this.onTick(snapshot);
 
       if (snapshot.state.status === 'running' && snapshot.remainingMs <= 0) {
+        this.onComplete({ ...snapshot, remainingMs: 0, progress: 1 });
         this.store.completeCurrentSession();
-        const completedSnapshot = this.store.getSnapshot();
-        this.onComplete(completedSnapshot);
+        this.onTick(this.store.getSnapshot());
         this.completedStateSeen = true;
       } else if (snapshot.state.status !== 'completed') {
         this.completedStateSeen = false;

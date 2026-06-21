@@ -89,7 +89,6 @@ export function createApp(root: HTMLElement): void {
           <div class="control-group mode-switch" aria-label="Timer mode">
             <button type="button" data-mode="focus" aria-pressed="true">Focus</button>
             <button type="button" data-mode="shortBreak" aria-pressed="false">Short</button>
-            <button type="button" data-mode="longBreak" aria-pressed="false">Long</button>
           </div>
 
           <div class="control-group actions">

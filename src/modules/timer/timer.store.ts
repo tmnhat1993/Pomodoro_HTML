@@ -96,7 +96,7 @@ export class TimerStore {
     };
 
     if (this.state.status === 'running' && calculateRemaining(this.state) <= 0) {
-      this.state = { ...this.state, status: 'completed', endAt: null, pausedRemainingMs: null };
+      this.completeCurrentSession();
     }
   }
 
@@ -220,13 +220,8 @@ export class TimerStore {
       this.state.mode === 'focus' ? this.dailyCycles.completedCycles : this.dailyCycles.completedCycles + 1;
     const completedFocusSessions =
       this.state.mode === 'focus' ? this.state.completedFocusSessions + 1 : this.state.completedFocusSessions;
-    const nextMode: TimerMode =
-      this.state.mode === 'focus'
-        ? completedFocusSessions % this.settings.sessionsBeforeLongBreak === 0
-          ? 'longBreak'
-          : 'shortBreak'
-        : 'focus';
-    const shouldAutoStart = nextMode === 'focus' ? this.settings.autoStartFocus : this.settings.autoStartBreak;
+    const nextMode: TimerMode = this.state.mode === 'focus' ? 'shortBreak' : 'focus';
+    const shouldAutoStart = this.state.mode === 'focus' || (nextMode === 'focus' ? this.settings.autoStartFocus : this.settings.autoStartBreak);
 
     this.state = {
       mode: nextMode,
