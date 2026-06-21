@@ -15,8 +15,11 @@
 }
 
 .debug-dialog {
-  width: min(760px, calc(var(--scene-width) - 24px));
+  position: fixed;
+  inset: 24px 18px auto auto;
+  width: min(430px, calc(var(--scene-width) - 24px));
   max-height: min(820px, calc(var(--scene-height) - 24px));
+  margin: 0;
   padding: 0;
   overflow: visible;
   border: 0;
@@ -26,8 +29,8 @@
 }
 
 .debug-dialog::backdrop {
-  background: rgba(45, 42, 48, 0.34);
-  backdrop-filter: blur(3px);
+  background: rgba(45, 42, 48, 0.08);
+  backdrop-filter: blur(1px);
 }
 
 .debug-panel {
@@ -173,6 +176,11 @@
 
   .debug-panel {
     padding: 16px;
+  }
+
+  .debug-dialog {
+    inset: 12px;
+    width: auto;
   }
 
   .debug-fieldset {
