@@ -127,6 +127,14 @@
   text-align: center;
 }
 
+.debug-fieldset--ring {
+  grid-template-columns: repeat(4, minmax(84px, 1fr));
+}
+
+.debug-fieldset--ring legend {
+  grid-column: 1 / -1;
+}
+
 .debug-output {
   display: grid;
   gap: 8px;
