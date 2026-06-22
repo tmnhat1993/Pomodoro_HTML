@@ -1,10 +1,345 @@
-@media (max-width: 1180px) {
+@media (max-width: 1440px) {
+  :root {
+    --logo-x: 2.5%;
+    --logo-y: 3%;
+    --logo-width: 16.4%;
+  }
+
+  .brand-wordmark {
+    filter: drop-shadow(0 6px 12px rgba(75, 46, 36, 0.09));
+  }
+
+  .digital-clock {
+    top: 20px;
+    right: 32px;
+    min-width: 129px;
+    padding: 10px 14px;
+    border-width: 3px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(75, 46, 36, 0.16);
+  }
+
+  .digital-clock span {
+    font-size: 1.29rem;
+  }
+
+  .digital-clock small {
+    font-size: 0.6rem;
+  }
+
   .control-bar {
-    width: var(--debug-width, 340px);
+    left: 66px;
+    bottom: 30px;
+    gap: 9px;
+    width: var(--debug-width, 270px);
+    padding: 10px;
+    border-width: 2px;
+    border-radius: 18px;
+    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
+  }
+
+  .control-header {
+    gap: 9px;
+  }
+
+  .control-header span {
+    font-size: 0.56rem;
+  }
+
+  .control-header strong {
+    margin-top: 1px;
+    font-size: 0.82rem;
+  }
+
+  .daily-cycles {
+    margin-top: 2px;
+    font-size: 0.58rem;
+  }
+
+  .control-group {
+    gap: 6px;
+  }
+
+  .preset-button,
+  .preset-delete,
+  .mode-switch button,
+  .actions button,
+  .custom-form button,
+  .add-custom-time-button,
+  .restore-presets-button,
+  .settings-button {
+    min-height: 33px;
+    border-width: 2px;
+    border-radius: 12px;
+    box-shadow: 0 4px 0 rgba(75, 46, 36, 0.07);
+    font-size: 0.76rem;
+  }
+
+  .mode-switch button,
+  .actions button,
+  .custom-form button,
+  .add-custom-time-button,
+  .restore-presets-button,
+  .settings-button {
+    padding: 0 10px;
+  }
+
+  .settings-button {
+    min-height: 30px;
+  }
+
+  .icon-action svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .icon-action[data-reset] svg {
+    width: 18px;
+    height: 18px;
   }
 
   .todo-panel {
-    width: var(--debug-width, 310px);
+    right: 32px;
+    bottom: 33px;
+    gap: 12px;
+    width: var(--debug-width, 285px);
+    max-height: 390px;
+    padding: 15px;
+    border-width: 2px;
+    border-radius: 18px;
+    box-shadow: 0 15px 38px rgba(75, 46, 36, 0.18);
+  }
+
+  .panel-header {
+    gap: 9px;
+  }
+
+  .panel-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .panel-header p {
+    margin-top: 3px;
+    font-size: 0.68rem;
+  }
+
+  .todo-form {
+    gap: 6px;
+  }
+
+  .todo-form label {
+    font-size: 0.6rem;
+  }
+
+  .todo-form div {
+    grid-template-columns: 1fr 35px;
+    gap: 6px;
+  }
+
+  .todo-form input {
+    min-height: 35px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: 0.76rem;
+  }
+
+  .todo-form button,
+  .icon-button,
+  .todo-fab,
+  .todo-check {
+    min-width: 33px;
+    min-height: 33px;
+    border-radius: 11px;
+    font-size: 0.76rem;
+  }
+
+  .empty-state {
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 0.76rem;
+  }
+
+  .todo-list {
+    gap: 8px;
+  }
+
+  .todo-item {
+    grid-template-columns: 33px 1fr 33px 33px;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 14px;
+    font-size: 0.76rem;
+  }
+
+  .debug-open {
+    top: 72px;
+    right: 14px;
+    min-height: 29px;
+    padding: 0 10px;
+    border-radius: 9px;
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 1080px) {
+  :root {
+    --logo-x: 2%;
+    --logo-y: 2.4%;
+    --logo-width: 14%;
+  }
+
+  .digital-clock {
+    top: 14px;
+    right: 24px;
+    min-width: 105px;
+    padding: 8px 10px;
+    border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .digital-clock span {
+    font-size: 1rem;
+  }
+
+  .digital-clock small {
+    font-size: 0.52rem;
+  }
+
+  .control-bar {
+    left: 44px;
+    bottom: 20px;
+    gap: 7px;
+    width: var(--debug-width, 218px);
+    padding: 8px;
+    border-radius: 15px;
+  }
+
+  .control-header span {
+    font-size: 0.5rem;
+  }
+
+  .control-header strong {
+    font-size: 0.72rem;
+  }
+
+  .daily-cycles {
+    font-size: 0.52rem;
+  }
+
+  .control-group {
+    gap: 5px;
+  }
+
+  .preset-button,
+  .preset-delete,
+  .mode-switch button,
+  .actions button,
+  .custom-form button,
+  .add-custom-time-button,
+  .restore-presets-button,
+  .settings-button {
+    min-height: 28px;
+    border-radius: 10px;
+    font-size: 0.64rem;
+  }
+
+  .mode-switch button,
+  .actions button,
+  .custom-form button,
+  .add-custom-time-button,
+  .restore-presets-button,
+  .settings-button {
+    padding: 0 7px;
+  }
+
+  .settings-button {
+    min-height: 26px;
+  }
+
+  .icon-action svg,
+  .icon-action[data-reset] svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .todo-panel {
+    right: 24px;
+    bottom: 24px;
+    gap: 9px;
+    width: var(--debug-width, 247px);
+    max-height: 338px;
+    padding: 13px;
+    border-radius: 16px;
+  }
+
+  .panel-header h2 {
+    font-size: 0.96rem;
+  }
+
+  .panel-header p {
+    font-size: 0.6rem;
+  }
+
+  .todo-form label {
+    font-size: 0.54rem;
+  }
+
+  .todo-form div {
+    grid-template-columns: 1fr 30px;
+    gap: 5px;
+  }
+
+  .todo-form input {
+    min-height: 30px;
+    padding: 0 8px;
+    border-radius: 10px;
+    font-size: 0.66rem;
+  }
+
+  .todo-form button,
+  .icon-button,
+  .todo-fab,
+  .todo-check {
+    min-width: 30px;
+    min-height: 30px;
+    border-radius: 10px;
+    font-size: 0.66rem;
+  }
+
+  .empty-state {
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.66rem;
+  }
+
+  .todo-list {
+    gap: 6px;
+  }
+
+  .todo-item {
+    grid-template-columns: 30px 1fr 30px 30px;
+    gap: 5px;
+    padding: 5px;
+    border-radius: 12px;
+    font-size: 0.66rem;
+  }
+
+  .debug-open {
+    top: 54px;
+    right: 11px;
+    min-height: 25px;
+    padding: 0 8px;
+    font-size: 0.54rem;
+  }
+}
+
+@media (min-width: 1081px) and (max-width: 1180px) {
+  .control-bar {
+    width: var(--debug-width, 252px);
+  }
+
+  .todo-panel {
+    width: var(--debug-width, 260px);
   }
 }
 
@@ -32,24 +367,24 @@
   .digital-clock {
     top: 14px;
     right: 14px;
-    min-width: 148px;
-    padding: 10px 14px;
-    border-width: 3px;
-    border-radius: 16px;
+    min-width: 105px;
+    padding: 8px 10px;
+    border-width: 2px;
+    border-radius: 12px;
   }
 
   .digital-clock span {
-    font-size: 1.14rem;
+    font-size: 1rem;
   }
 
   .digital-clock small {
-    font-size: 0.62rem;
+    font-size: 0.52rem;
   }
 
   .control-bar {
-    left: 88px;
-    bottom: 40px;
-    width: var(--debug-width, 340px);
+    left: 22px;
+    bottom: 15px;
+    width: var(--debug-width, 170px);
     transform: translate(var(--debug-x, 0), var(--debug-y, 0));
   }
 
