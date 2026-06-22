@@ -31,12 +31,11 @@
     left: 66px;
     bottom: 30px;
     gap: 9px;
-    width: var(--debug-width, 270px);
+    width: 270px;
     padding: 10px;
     border-width: 2px;
     border-radius: 18px;
-    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
-  }
+      }
 
   .control-header {
     gap: 9px;
@@ -102,7 +101,7 @@
     right: 32px;
     bottom: 33px;
     gap: 12px;
-    width: var(--debug-width, 285px);
+    width: 285px;
     max-height: 390px;
     padding: 15px;
     border-width: 2px;
@@ -171,14 +170,6 @@
     font-size: 0.76rem;
   }
 
-  .debug-open {
-    top: 72px;
-    right: 14px;
-    min-height: 29px;
-    padding: 0 10px;
-    border-radius: 9px;
-    font-size: 0.62rem;
-  }
 }
 
 @media (max-width: 1080px) {
@@ -209,7 +200,7 @@
     left: 44px;
     bottom: 20px;
     gap: 7px;
-    width: var(--debug-width, 218px);
+    width: 218px;
     padding: 8px;
     border-radius: 15px;
   }
@@ -266,7 +257,7 @@
     right: 24px;
     bottom: 24px;
     gap: 9px;
-    width: var(--debug-width, 247px);
+    width: 247px;
     max-height: 338px;
     padding: 13px;
     border-radius: 16px;
@@ -324,22 +315,15 @@
     font-size: 0.66rem;
   }
 
-  .debug-open {
-    top: 54px;
-    right: 11px;
-    min-height: 25px;
-    padding: 0 8px;
-    font-size: 0.54rem;
-  }
 }
 
 @media (min-width: 1081px) and (max-width: 1180px) {
   .control-bar {
-    width: var(--debug-width, 252px);
+    width: 252px;
   }
 
   .todo-panel {
-    width: var(--debug-width, 260px);
+    width: 260px;
   }
 }
 
@@ -349,7 +333,7 @@
     top: var(--logo-y);
     left: var(--logo-x);
     z-index: 20;
-    width: var(--debug-width, var(--logo-width));
+    width: var(--logo-width);
     padding: 0;
   }
 
@@ -360,9 +344,8 @@
   .tomato-timer {
     left: 24.479%;
     bottom: 8.444%;
-    width: var(--debug-width, 25.573%);
-    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
-  }
+    width: 25.573%;
+      }
 
   .digital-clock {
     top: 14px;
@@ -384,9 +367,8 @@
   .control-bar {
     left: 22px;
     bottom: 15px;
-    width: var(--debug-width, 170px);
-    transform: translate(var(--debug-x, 0), var(--debug-y, 0));
-  }
+    width: 170px;
+      }
 
   .mode-switch,
   .actions {
@@ -405,16 +387,16 @@
     top: auto;
     right: 50%;
     bottom: 0;
-    width: var(--debug-width, 560px);
+    width: 560px;
     max-height: 520px;
     padding-bottom: 24px;
-    transform: translate(50%, 105%) translate(var(--debug-x, 0), var(--debug-y, 0));
+    transform: translate(50%, 105%);
     border-radius: 28px 28px 0 0;
     transition: transform 220ms ease;
   }
 
   .todo-panel.is-open {
-    transform: translate(50%, 0) translate(var(--debug-x, 0), var(--debug-y, 0));
+    transform: translate(50%, 0);
   }
 
   .todo-panel .todo-close {
@@ -452,7 +434,7 @@
 
 @media (max-width: 560px) {
   .brand-block {
-    width: var(--debug-width, var(--logo-width));
+    width: var(--logo-width);
     padding: 0;
   }
 
@@ -462,7 +444,7 @@
 
   .tomato-timer {
     bottom: 8.444%;
-    width: var(--debug-width, 25.573%);
+    width: 25.573%;
   }
 
   .control-bar {

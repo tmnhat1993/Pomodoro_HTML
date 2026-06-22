@@ -1,17 +1,14 @@
 import { ClockView } from './modules/clock/clock.view';
 import { assetPath } from './modules/assets';
-import { setupDebugLayout } from './modules/debug/debug-layout';
 import { NotificationService } from './modules/notifications/notifications';
 import { updateTabTitle } from './modules/notifications/tab-title';
-import { setupSceneCanvas, type TimeLayer, type WeatherCondition, type WeatherLayer } from './modules/scene/scene-canvas';
+import { setupSceneCanvas, type TimeLayer, type WeatherCondition } from './modules/scene/scene-canvas';
 import { applyTimeTheme } from './modules/scene/scene-theme';
 import { TimerController } from './modules/timer/timer.controller';
 import { TimerStore } from './modules/timer/timer.store';
 import { TimerView } from './modules/timer/timer.view';
 import { TodoStore } from './modules/todo/todo.store';
 import { TodoView } from './modules/todo/todo.view';
-
-type DebugWeatherValue = WeatherLayer | 'auto';
 
 const weatherCycleMs = 10 * 60 * 1000;
 const randomWeatherConditions: WeatherCondition[] = ['clear', 'rain', 'snow'];
@@ -40,21 +37,21 @@ export function createApp(root: HTMLElement): void {
           <canvas class="scene-canvas" data-scene-canvas></canvas>
         </div>
 
-        <div class="brand-block" aria-label="Pomodoro" data-debug-target="brand">
+        <div class="brand-block" aria-label="Pomodoro">
           <img class="brand-wordmark" src="${assetPath('brand/pomodoro-wordmark-420.png')}" alt="Pomodoro. Focus. Rest. Repeat." />
           <h1 class="sr-only">Pomodoro</h1>
         </div>
 
-        <article class="tomato-timer" aria-label="Timer" data-debug-target="timer">
+        <article class="tomato-timer" aria-label="Timer">
           <canvas class="timer-canvas" data-timer-canvas aria-label="Focus 25:00 idle"></canvas>
         </article>
 
-        <aside class="digital-clock" aria-label="Digital desk clock" data-debug-target="clock">
+        <aside class="digital-clock" aria-label="Digital desk clock">
           <span data-clock-time>00:00:00</span>
           <small data-clock-date>loading</small>
         </aside>
 
-        <aside class="todo-panel" aria-label="Todo list" data-debug-target="todo">
+        <aside class="todo-panel" aria-label="Todo list">
           <div class="panel-header">
             <div>
               <h2>Today</h2>
@@ -76,7 +73,7 @@ export function createApp(root: HTMLElement): void {
         <button class="todo-fab" type="button" aria-label="Open todo drawer" aria-expanded="false">☑</button>
         <div class="drawer-backdrop" data-drawer-backdrop></div>
 
-        <section class="control-bar" aria-label="Timer controls" data-debug-target="controls">
+        <section class="control-bar" aria-label="Timer controls">
           <div class="control-header">
             <div>
               <span>Session</span>
@@ -177,39 +174,6 @@ export function createApp(root: HTMLElement): void {
           </div>
         </dialog>
 
-        <button class="debug-open" type="button" data-debug-open aria-label="Open layout debug">Debug</button>
-        <dialog class="debug-dialog" data-debug-dialog aria-labelledby="debug-title">
-          <div class="debug-panel">
-            <div class="debug-header">
-              <div>
-                <h2 id="debug-title">Debug layout</h2>
-                <p>Timer and logo use app-canvas percentages; other panels use pixels.</p>
-              </div>
-              <button class="icon-button" type="button" data-debug-close aria-label="Close debug">×</button>
-            </div>
-            <label class="debug-weather-control">
-              Weather layer
-              <select data-debug-weather>
-                <option value="auto">Auto</option>
-                <option value="day">Ban ngày</option>
-                <option value="night">Ban đêm</option>
-                <option value="sunset">Hoàng hôn</option>
-                <option value="dawn">Bình minh</option>
-                <option value="rainDay">Mưa ngày</option>
-                <option value="rainNight">Mưa đêm</option>
-                <option value="snowDay">Tuyết ngày</option>
-                <option value="snowNight">Tuyết đêm</option>
-              </select>
-            </label>
-            <form class="debug-form" data-debug-form></form>
-            <label class="debug-output">
-              Current values
-              <textarea data-debug-output rows="8" readonly></textarea>
-            </label>
-            <button class="debug-reset" type="button" data-debug-reset>Reset layout overrides</button>
-          </div>
-        </dialog>
-
         <div class="toast-root" data-toast-root></div>
       </section>
 
@@ -270,7 +234,6 @@ export function createApp(root: HTMLElement): void {
   const settingsDialog = root.querySelector<HTMLDialogElement>('[data-settings-dialog]')!;
   const settingsOpenButton = root.querySelector<HTMLButtonElement>('[data-settings-open]')!;
   const settingsCloseButton = root.querySelector<HTMLButtonElement>('[data-settings-close]')!;
-  const debugWeatherSelect = root.querySelector<HTMLSelectElement>('[data-debug-weather]')!;
   const controlSummary = root.querySelector<HTMLElement>('[data-control-summary]')!;
   const mobileNotice = root.querySelector<HTMLElement>('[data-mobile-notice]')!;
   const mobileNoticeCloseButton = root.querySelector<HTMLButtonElement>('[data-mobile-notice-close]')!;
@@ -282,15 +245,12 @@ export function createApp(root: HTMLElement): void {
   });
   todoStore.subscribe((items) => todoView.render(items));
 
-  const automaticScene = (() => {
-    let isEnabled = true;
+  (() => {
     let activeWeatherBlock = -1;
     let activeWeatherCondition: WeatherCondition | undefined;
     let appliedSceneKey = '';
 
     const sync = (): void => {
-      if (!isEnabled) return;
-
       const now = new Date();
       const weatherBlock = Math.floor(now.getTime() / weatherCycleMs);
       if (weatherBlock !== activeWeatherBlock) {
@@ -305,36 +265,13 @@ export function createApp(root: HTMLElement): void {
 
       sceneRenderer.setScene(timeLayer, weatherCondition);
       appliedSceneKey = sceneKey;
-      debugWeatherSelect.value = 'auto';
     };
 
     const intervalId = window.setInterval(sync, 30_000);
     sync();
 
-    return {
-      setEnabled(enabled: boolean): void {
-        isEnabled = enabled;
-        if (enabled) {
-          appliedSceneKey = '';
-          sync();
-        }
-      },
-      stop(): void {
-        window.clearInterval(intervalId);
-      }
-    };
+    return () => window.clearInterval(intervalId);
   })();
-
-  debugWeatherSelect.addEventListener('change', () => {
-    const value = debugWeatherSelect.value as DebugWeatherValue;
-    if (value === 'auto') {
-      automaticScene.setEnabled(true);
-      return;
-    }
-
-    automaticScene.setEnabled(false);
-    sceneRenderer.setWeather(value);
-  });
 
   settingsOpenButton.addEventListener('click', () => {
     if (!settingsDialog.open) {
@@ -378,7 +315,6 @@ export function createApp(root: HTMLElement): void {
 
   clock.start();
   controller.startLoop();
-  setupDebugLayout(root);
 
   window.addEventListener('keydown', (event) => {
     if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;

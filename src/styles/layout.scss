@@ -25,9 +25,8 @@
   top: var(--logo-y);
   left: var(--logo-x);
   display: block;
-  width: var(--debug-width, var(--logo-width));
-  transform: translate(var(--debug-x, 0), var(--debug-y, 0));
-}
+  width: var(--logo-width);
+  }
 
 .brand-wordmark {
   display: block;

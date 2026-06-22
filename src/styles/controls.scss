@@ -5,15 +5,14 @@
   bottom: 40px;
   display: grid;
   gap: 12px;
-  width: var(--debug-width, 360px);
+  width: 360px;
   padding: 14px;
   border: 3px solid rgba(75, 46, 36, 0.16);
   border-radius: var(--radius-card);
   background: rgba(255, 244, 226, 0.93);
   box-shadow: var(--shadow-bold);
   backdrop-filter: blur(14px);
-  transform: translate(var(--debug-x, 0), var(--debug-y, 0));
-}
+  }
 
 .control-header {
   display: flex;

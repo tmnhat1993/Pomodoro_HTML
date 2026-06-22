@@ -23,16 +23,10 @@ function formatDuration(ms: number): string {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-function readPercentVariable(styles: CSSStyleDeclaration, name: string, fallback: number): number {
-  const value = Number.parseFloat(styles.getPropertyValue(name));
-  return Number.isFinite(value) ? value / 100 : fallback / 100;
-}
-
 export class TimerCanvasRenderer {
   private readonly context: CanvasRenderingContext2D;
   private readonly image = new Image();
   private readonly resizeObserver: ResizeObserver;
-  private readonly handleRingDebugChange = (): void => this.draw();
   private latestSnapshot: TimerSnapshot | null = null;
   private imageReady = false;
 
@@ -60,7 +54,6 @@ export class TimerCanvasRenderer {
 
   start(): void {
     this.resizeObserver.observe(this.root);
-    this.root.addEventListener('pomodoro:timer-ring-debug-change', this.handleRingDebugChange);
     this.resizeCanvas();
   }
 
@@ -77,7 +70,6 @@ export class TimerCanvasRenderer {
 
   stop(): void {
     this.resizeObserver.disconnect();
-    this.root.removeEventListener('pomodoro:timer-ring-debug-change', this.handleRingDebugChange);
   }
 
   private resizeCanvas(): void {
@@ -130,11 +122,10 @@ export class TimerCanvasRenderer {
   private drawProgressRing(width: number, height: number, snapshot: TimerSnapshot): void {
     const durationMs = Math.max(1, snapshot.state.durationMs);
     const remainingRatio = snapshot.state.status === 'idle' ? 1 : Math.max(0, Math.min(1, snapshot.remainingMs / durationMs));
-    const styles = getComputedStyle(this.root);
-    const centerX = width * readPercentVariable(styles, '--timer-ring-x', defaultRingConfig.x);
-    const centerY = height * readPercentVariable(styles, '--timer-ring-y', defaultRingConfig.y);
-    const radius = width * readPercentVariable(styles, '--timer-ring-size', defaultRingConfig.size);
-    const lineWidth = width * readPercentVariable(styles, '--timer-ring-thickness', defaultRingConfig.thickness);
+    const centerX = width * (defaultRingConfig.x / 100);
+    const centerY = height * (defaultRingConfig.y / 100);
+    const radius = width * (defaultRingConfig.size / 100);
+    const lineWidth = width * (defaultRingConfig.thickness / 100);
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + Math.PI * 2 * remainingRatio;
 
